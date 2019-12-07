@@ -144,25 +144,25 @@ package LADSPA is
      Convention => C;
 
    type Descriptors is record
-      Unique_ID           : aliased unsigned_long;
-      Label               : Interfaces.C.Strings.chars_ptr;
-      Properties          : aliased All_Properties;
-      Name                : Interfaces.C.Strings.chars_ptr;
-      Maker               : Interfaces.C.Strings.chars_ptr;
-      Copyright           : Interfaces.C.Strings.chars_ptr;
-      Port_Count          : aliased unsigned_long;
-      Port_Descriptors    : access All_Port_Descriptors;
-      Port_Names          : System.Address;
-      Port_Range_Hints    : access constant All_Port_Range_Hints;
-      ImplementationData  : System.Address;
-      Instantiate         : Instantiators;
-      Connect_Port        : Port_Connectors;
-      Activate            : Activators;
-      Run                 : Runners;
-      Run_Adding          : Runners;
-      Set_Run_Adding_Gain : Gain_Adding_Runners;
-      Deactivate          : Deactivators;
-      Clean_Up            : Cleaners;
+      Unique_ID            : aliased unsigned_long;
+      Label                : Interfaces.C.Strings.chars_ptr;
+      Properties           : aliased All_Properties;
+      Name                 : Interfaces.C.Strings.chars_ptr;
+      Maker                : Interfaces.C.Strings.chars_ptr;
+      Copyright            : Interfaces.C.Strings.chars_ptr;
+      Port_Count           : aliased unsigned_long;
+      Port_Descriptors     : System.Address;  --  access All_Port_Descriptors;
+      Port_Names           : System.Address;
+      Port_Range_Hints     : System.Address;  --  access constant All_Port_Range_Hints;
+      Implementation_Data  : System.Address;
+      Instantiate          : Instantiators;
+      Connect_Port         : Port_Connectors;
+      Activate             : Activators;
+      Run                  : Runners;
+      Run_Adding           : Runners;
+      Set_Run_Adding_Gain  : Gain_Adding_Runners;
+      Deactivate           : Deactivators;
+      Clean_Up             : Cleaners;
    end record with
      Convention => C_Pass_By_Copy;
 
