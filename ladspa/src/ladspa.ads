@@ -152,7 +152,7 @@ package LADSPA is
       Copyright            : Interfaces.C.Strings.chars_ptr;
       Port_Count           : aliased unsigned_long;
       Port_Descriptors     : System.Address;  --  access All_Port_Descriptors;
-      Port_Names           : System.Address;
+      Port_Names           : access Interfaces.C.Strings.chars_ptr;  --  System.Address;
       Port_Range_Hints     : System.Address;  --  access constant All_Port_Range_Hints;
       Implementation_Data  : System.Address;
       Instantiate          : Instantiators;

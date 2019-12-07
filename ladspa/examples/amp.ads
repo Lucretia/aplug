@@ -53,7 +53,7 @@ private
       Input_1  => (LADSPA.Input or LADSPA.Audio),
       Output_1 => (LADSPA.Output or LADSPA.Audio));
 
-   type Mono_Port_Names_Array is array (Mono_Port_Numbers) of C.Strings.chars_ptr with
+   type Mono_Port_Names_Array is array (Mono_Port_Numbers) of aliased C.Strings.chars_ptr with
      Convention => C;
 
    Mono_Port_Names : Mono_Port_Names_Array :=
@@ -73,16 +73,18 @@ private
       Output_1 => (Hint_Descriptor => LADSPA.Default_None,
                    others          => <>));
 
-   Mono_Descriptor : aliased LADSPA.Descriptors :=
+  use type Interfaces.C.unsigned_long;
+
+  Mono_Descriptor : aliased LADSPA.Descriptors :=
      (Unique_ID        => 1048,
       Label            => C.Strings.New_String ("amp_mono"),
       Properties       => LADSPA.Hard_RT_Capable,
       Name             => C.Strings.New_String ("Mono Amplifier"),
       Maker            => C.Strings.New_String ("Richard Furse (LADSPA example plugins) & Luke A. Guest (Ada port)"),
       Copyright        => C.Strings.New_String ("None"),
-      Port_Count       => 3,
+      Port_Count       => Mono_Port_Numbers'Pos (Mono_Port_Numbers'Last) + 1,  --  Pos starts at 0!
       Port_Descriptors => Mono_Port_Descriptors'Address,
-      Port_Names       => Mono_Port_Names'Address,
+      Port_Names       => Mono_Port_Names (Mono_Port_Names'First)'Access,
       Port_Range_Hints => Mono_Port_Range_Hints'Address,
       Instantiate      => Instantiate'Access,
       Connect_Port     => Connect_Port'Access,
