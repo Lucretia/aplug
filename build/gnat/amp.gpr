@@ -1,8 +1,9 @@
 -- with "ladspa.gpr";
 
-project Amp extends "ladspa.gpr" is
+library project Amp extends "ladspa.gpr" is
    Name := "amp";
 
+   -- for Source_Dirs     use ("../../ladspa/examples");
    for Source_Dirs     use (LADSPA.Source_Dirs, "../../ladspa/examples");
    for Source_Files    use (LADSPA.Source_Files, Name & ".adb", Name & ".ads");
    for Object_Dir      use "gen/" & LADSPA.Mode & "/.obj";

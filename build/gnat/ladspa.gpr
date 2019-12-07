@@ -1,4 +1,4 @@
-project LADSPA is
+abstract project LADSPA is
    Version := "0.1";
 
    --  type Build_Type is ("linux", "bsd", "windows", "macosx");
@@ -8,7 +8,7 @@ project LADSPA is
    --  Build : Build_Type := external ("LADSPA_BUILD", "linux");
 
    -- for Languages use ("Ada", "C");
-   for Languages use ("Ada");
+   -- for Languages use ("Ada");
 
    -- package Builder is
    --    for Default_Switches ("Ada") use ("--keep-temp-files");
@@ -45,10 +45,11 @@ project LADSPA is
 
    Source_Files := "ladspa.ads";
    Source_Dirs  := "../../ladspa/src";
+   -- for Source_Dirs     use ();
    -- for Source_Dirs     use ("../../ladspa/src"); --, "../../src/c");
-   -- for Object_Dir      use "gen/" & Mode & ".obj";
-   -- for Library_ALI_Dir use "gen/" & Mode & ".obj/ali";
-   -- for Library_Dir     use "gen" & Mode;
+   -- for Object_Dir      use "gen/" & Mode & "/.obj";
+   -- for Library_ALI_Dir use "gen/" & Mode & "/.obj/ali";
+   -- for Library_Dir     use "gen/" & Mode;
    -- for Library_Name    use "ladspa-ada";
    -- for Library_Kind    use "static";
 end LADSPA;
