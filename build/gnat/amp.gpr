@@ -5,14 +5,14 @@ library project Amp extends "ladspa.gpr" is
 
    -- for Source_Dirs     use ("../../ladspa/examples");
    for Source_Dirs     use (LADSPA.Source_Dirs, "../../ladspa/examples");
-   for Source_Files    use (LADSPA.Source_Files, Name & ".adb", Name & ".ads");
+   for Source_Files    use (LADSPA.Source_Files, "amp.adb", "amp.ads");
    for Object_Dir      use "gen/" & LADSPA.Mode & "/.obj";
    for Library_ALI_Dir use "gen/" & LADSPA.Mode & "/.obj/ali";
    for Library_Dir     use "gen/" & LADSPA.Mode;
    for Library_Name    use Name;
    for Library_Version use Name & ".so";
    for Library_Kind       use "dynamic";
-   for Library_Interface  use ("ladspa");
+   for Library_Interface  use ("ladspa", "amp");
    -- for Library_Standalone use "encapsulated";
    -- for Library_Auto_Init  use "True";
 end Amp;
