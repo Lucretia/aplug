@@ -2,6 +2,10 @@
 
 Port of the LADSPA 1.1.1 API for Ada 2012. Doesn't do much at this time but does show up in Carla.
 
+## Screenshots
+
+I've only tested in Carla at this time.
+
 ![Carla plug-in window](./screenshots/carla.png)
 ![Carla main window](./screenshots/carla_main_window.png)
 ![Carla patch bay window](./screenshots/carla_patchbay.png)
