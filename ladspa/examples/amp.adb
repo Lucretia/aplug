@@ -42,7 +42,11 @@ package body Amp is
    --    null;
    -- end;
 
-   procedure Run (Instance : in out LADSPA.Handles; Sample_Count : in C.unsigned_long) is separate;
+   --  WARNING: Cannot do IO or memory allocations here.
+   procedure Run (Instance : in out LADSPA.Handles; Sample_Count : in C.unsigned_long) is
+   begin
+      null;
+   end Run;
 
    -- procedure Run_Adding (Instance : in out Handles; Sample_Count : in unsigned_long) is
    -- begin
