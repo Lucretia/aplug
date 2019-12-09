@@ -193,12 +193,6 @@ package LADSPA is
    end record with
      Convention => C_Pass_By_Copy;
 
-   --  /usr/include/ladspa.h:589
-   --  function ladspa_descriptor (Index : in unsigned_long) return access constant Descriptors with
-   --    Import        => True,
-   --    Convention    => C,
-   --    External_Name => "ladspa_descriptor";
-
    type Descriptor_Functions is access function (Index : unsigned_long) return access constant Descriptors with
      Convention => C;  --  /usr/include/ladspa.h:593
 end LADSPA;
