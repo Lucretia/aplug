@@ -141,10 +141,6 @@ package body Amp is
 
    function Descriptor (Index : C.unsigned_long) return access constant LADSPA.Descriptors is
    begin
-      -- for I in Mono_Port_Numbers'Range loop
-      --    Put_Line (">>> " & Mono_Port_Numbers'Image (I) & " = " & C.unsigned_long'Image (Mono_Port_Numbers'Pos (I)));
-      -- end loop;
-      -- Put_Line (">>> " & C.unsigned_long'Image (Mono_Descriptor.Port_Count));
       case Index is
          when 0 =>
             return Mono_Descriptor'Access;
