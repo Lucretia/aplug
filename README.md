@@ -1,6 +1,10 @@
 # APlug
 
-Port of the LADSPA 1.1.1 API for Ada 2012. Doesn't do much at this time but does show up in Carla.
+Port of the LADSPA 1.1.1 API for Ada 2012.
+
+## Features
+
+* Mono amplifier.
 
 ## Screenshots
 
