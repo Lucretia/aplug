@@ -45,8 +45,12 @@ package body Amp is
             Free (Amp);
 
             --  TODO: This needs to go into a controlled object.
-            for C_Str in Mono_Port_Numbers loop
-               C.Strings.Free (Mono_Port_Names (C_Str));
+            for C_Str_Index in Mono_Port_Numbers loop
+               declare
+                  C_Str : C.Strings.chars_ptr := Mono_Port_Names (C_Str_Index);
+               begin
+                  C.Strings.Free (C_Str);
+               end;
             end loop;
 
             C.Strings.Free (Mono_Descriptor.Label);

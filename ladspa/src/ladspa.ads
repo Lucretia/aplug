@@ -168,6 +168,8 @@ package LADSPA is
    type Cleaners is access procedure (Instance : in Handles) with
      Convention => C;
 
+   type Port_Name_Array_Ptr is not null access constant Interfaces.C.Strings.chars_ptr;
+
    type Descriptors is record
       Unique_ID            : aliased unsigned_long;
       Label                : Interfaces.C.Strings.chars_ptr;
@@ -177,7 +179,7 @@ package LADSPA is
       Copyright            : Interfaces.C.Strings.chars_ptr;
       Port_Count           : aliased unsigned_long;
       Port_Descriptors     : System.Address;  --  access All_Port_Descriptors;
-      Port_Names           : access Interfaces.C.Strings.chars_ptr;  --  System.Address;
+      Port_Names           : Port_Name_Array_Ptr;
       Port_Range_Hints     : System.Address;  --  access constant All_Port_Range_Hints;
       Implementation_Data  : System.Address;
       Instantiate          : Instantiators;
