@@ -138,7 +138,7 @@ package body Amp is
    end Descriptor;
 
 
-   overriding procedure Finalize (Self : in out Mono_Descriptors) is
+   overriding procedure Finalize (Self : in out Descriptors) is
    begin
       for C_Str_Index in Mono_Port_Numbers loop
          declare

@@ -69,14 +69,14 @@ private
    use type Interfaces.C.unsigned_long;
 
    --  This is required so that on finalisation of the library (unload), the globally allocated data is destroyed.
-   type Mono_Descriptors is new Ada.Finalization.Limited_Controlled with
+   type Descriptors is new Ada.Finalization.Limited_Controlled with
       record
          Data : aliased LADSPA.Descriptors;
       end record;
 
-   overriding procedure Finalize (Self : in out Mono_Descriptors);
+   overriding procedure Finalize (Self : in out Descriptors);
 
-   Mono_Descriptor : Mono_Descriptors := (Ada.Finalization.Limited_Controlled with
+   Mono_Descriptor : Descriptors := (Ada.Finalization.Limited_Controlled with
       Data => (
         Unique_ID        => 1048,
         Label            => C.Strings.New_String ("amp_mono"),
