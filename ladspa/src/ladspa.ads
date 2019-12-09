@@ -12,10 +12,16 @@ package LADSPA is
    Version_Major : constant := 1;
    Version_Minor : constant := 1;
 
-   subtype Data is C_float;  -- /usr/include/ladspa.h:84
+   subtype Data is C_float;  --  /usr/include/ladspa.h:84
+
+   type Data_Ptr is access all Data with
+     Convention => C;
+
+   type Data_Array is array (unsigned_long range <>) of aliased Data with
+     Convention => C;
 
    --  As defined in C, this is an int, which is signed! In Ada, it must be unsigned.
-   type All_Properties is mod 2 ** int'Size with  -- /usr/include/ladspa.h:94
+   type All_Properties is mod 2 ** int'Size with  --  /usr/include/ladspa.h:94
      Convention => C;
 
    --  See ladspa.h for description of each.
@@ -31,7 +37,7 @@ package LADSPA is
    --    return (x) and LADSPA_PROPERTY_HARD_RT_CAPABLE;
 
    --  As above, re All_Properties.
-   type All_Port_Descriptors is mod 2 ** int'Size with  -- /usr/include/ladspa.h:152
+   type All_Port_Descriptors is mod 2 ** int'Size with  --  /usr/include/ladspa.h:152
      Convention => C;
 
    --  See ladspa.h for description of each.
@@ -50,7 +56,7 @@ package LADSPA is
    --    return (x) and LADSPA_PORT_AUDIO;
 
    --  As above, re All_Properties.
-   type Port_Range_Hint_Descriptors is mod 2 ** int'Size with  -- /usr/include/ladspa.h:200
+   type Port_Range_Hint_Descriptors is mod 2 ** int'Size with  --  /usr/include/ladspa.h:200
      Convention => C;
 
    --  See ladspa.h for description of each.
@@ -112,7 +118,11 @@ package LADSPA is
       end record with
         Convention => C_Pass_By_Copy;
 
-   type Handles is new System.Address;  -- /usr/include/ladspa.h:363
+   type Base_Handle is null record with  --  /usr/include/ladspa.h:363
+     Convention => C;
+
+   type Handles is access all Base_Handle with
+     Convention => C;
 
    type Descriptors;
 
@@ -122,25 +132,25 @@ package LADSPA is
 
    type Port_Connectors is access procedure (Instance      : in Handles;
                                              Port          : in unsigned_long;
-                                             Data_Location : access Data) with
+                                             Data_Location : in Data_Ptr) with
      Convention => C;
 
-   type Activators is access procedure (Instance : in out Handles) with
+   type Activators is access procedure (Instance : in Handles) with
      Convention => C;
 
-   type Deactivators is access procedure (Instance : in out Handles) with
+   type Deactivators is access procedure (Instance : in Handles) with
      Convention => C;
 
-   type Runners is access procedure (Instance : in out Handles; Sample_Count : in unsigned_long) with
+   type Runners is access procedure (Instance : in Handles; Sample_Count : in unsigned_long) with
      Convention => C;
 
-   -- type Adding_Runners is access procedure (Instance : in out Handles; Sample_Count : in unsigned_long) with
-   --   Convention => C;
+   --  type Adding_Runners is access procedure (Instance : in out Handles; Sample_Count : in unsigned_long) with
+   --    Convention => C;
 
-   type Gain_Adding_Runners is access procedure (Instance : in out Handles; Gain : in Data) with
+   type Gain_Adding_Runners is access procedure (Instance : in Handles; Gain : in Data) with
      Convention => C;
 
-   type Cleaners is access procedure (Instance : in out Handles) with
+   type Cleaners is access procedure (Instance : in Handles) with
      Convention => C;
 
    type Descriptors is record
@@ -166,12 +176,12 @@ package LADSPA is
    end record with
      Convention => C_Pass_By_Copy;
 
-   -- /usr/include/ladspa.h:589
-   -- function ladspa_descriptor (Index : in unsigned_long) return access constant Descriptors with
-   --   Import        => True,
-   --   Convention    => C,
-   --   External_Name => "ladspa_descriptor";
+   --  /usr/include/ladspa.h:589
+   --  function ladspa_descriptor (Index : in unsigned_long) return access constant Descriptors with
+   --    Import        => True,
+   --    Convention    => C,
+   --    External_Name => "ladspa_descriptor";
 
    type Descriptor_Functions is access function (Index : unsigned_long) return access constant Descriptors with
-     Convention => C;  -- /usr/include/ladspa.h:593
+     Convention => C;  --  /usr/include/ladspa.h:593
 end LADSPA;
