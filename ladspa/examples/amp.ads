@@ -19,9 +19,13 @@ package Amp is
                          Sample_Rate : C.unsigned_long) return LADSPA.Handles with
      Convention => C;
 
+   procedure Clean_Up (Instance : in LADSPA.Handles) with
+     Convention => C;
+
+
    procedure Connect_Port (Instance      : in LADSPA.Handles;
                            Port          : in C.unsigned_long;
-                           Data_Location : access LADSPA.Data) with
+                           Data_Location : in LADSPA.Data_Ptr) with
      Convention => C;
 
    -- procedure Activate (Instance : in out Handles) with
@@ -30,7 +34,7 @@ package Amp is
    -- procedure Deactivate (Instance : in out Handles) with
    --   Convention => C;
 
-   procedure Run (Instance : in out LADSPA.Handles; Sample_Count : in C.unsigned_long) with
+   procedure Run (Instance : in LADSPA.Handles; Sample_Count : in C.unsigned_long) with
      Convention => C;
 
    -- procedure Run_Adding (Instance : in out Handles; Sample_Count : in unsigned_long) with
@@ -38,9 +42,6 @@ package Amp is
 
    -- procedure Run_Adding_Gain (Instance : in out Handles; Gain : in Data) with
    --   Convention => C;
-
-   procedure Clean_Up (Instance : in out LADSPA.Handles) with
-     Convention => C;
 private
    use type LADSPA.All_Port_Descriptors;
    use type LADSPA.Port_Range_Hint_Descriptors;
