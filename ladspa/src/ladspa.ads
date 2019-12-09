@@ -5,7 +5,7 @@ with System;
 package LADSPA is
    pragma Preelaborate;
 
-   Version       : aliased constant String := "1.1";
+   Version       : constant String := "1.1";
    Version_Major : constant := 1;
    Version_Minor : constant := 1;
 
@@ -120,13 +120,13 @@ package LADSPA is
    generic
       type Port_Type is (<>);
    package Port_Information is
-      type Descriptor_Array is array (Port_Type) of LADSPA.All_Port_Descriptors with
+      type Descriptor_Array is array (Port_Type) of All_Port_Descriptors with
         Convention => C;
 
       type Name_Array is array (Port_Type) of aliased Interfaces.C.Strings.chars_ptr with
         Convention => C;
 
-      type Range_Hint_Array is array (Port_Type) of LADSPA.All_Port_Range_Hints with
+      type Range_Hint_Array is array (Port_Type) of All_Port_Range_Hints with
         Convention => C;
    end Port_Information;
 
