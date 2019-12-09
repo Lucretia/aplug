@@ -118,6 +118,21 @@ package LADSPA is
       end record with
         Convention => C_Pass_By_Copy;
 
+   --  Helper package.
+   --  TODO: There's got to be a better name for this!
+   generic
+      type Port_Type is (<>);
+   package Port_Information is
+      type Descriptor_Array is array (Port_Type) of LADSPA.All_Port_Descriptors with
+        Convention => C;
+
+      type Name_Array is array (Port_Type) of aliased Interfaces.C.Strings.chars_ptr with
+        Convention => C;
+
+      type Range_Hint_Array is array (Port_Type) of LADSPA.All_Port_Range_Hints with
+        Convention => C;
+   end Port_Information;
+
    type Base_Handle is null record with  --  /usr/include/ladspa.h:363
      Convention => C;
 

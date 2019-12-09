@@ -44,26 +44,19 @@ private
    use type LADSPA.All_Port_Descriptors;
    use type LADSPA.Port_Range_Hint_Descriptors;
 
-   type Mono_Port_Descriptor_Array is array (Mono_Port_Numbers) of LADSPA.All_Port_Descriptors with
-     Convention => C;
+   package Mono_Ports is new LADSPA.Port_Information (Port_Type => Mono_Port_Numbers);
 
-   Mono_Port_Descriptors : aliased constant Mono_Port_Descriptor_Array :=
+   Mono_Port_Descriptors : aliased constant Mono_Ports.Descriptor_Array :=
      (Gain     => (LADSPA.Input or LADSPA.Control),
       Input_1  => (LADSPA.Input or LADSPA.Audio),
       Output_1 => (LADSPA.Output or LADSPA.Audio));
 
-   type Mono_Port_Names_Array is array (Mono_Port_Numbers) of aliased C.Strings.chars_ptr with
-     Convention => C;
-
-   Mono_Port_Names : Mono_Port_Names_Array :=
+   Mono_Port_Names : constant Mono_Ports.Name_Array :=
      (Gain     => C.Strings.New_String ("Gain"),
       Input_1  => C.Strings.New_String ("Input"),
       Output_1 => C.Strings.New_String ("Output"));
 
-   type Mono_Port_Range_Hints_Array is array (Mono_Port_Numbers) of LADSPA.All_Port_Range_Hints with
-     Convention => C;
-
-   Mono_Port_Range_Hints : constant Mono_Port_Range_Hints_Array :=
+   Mono_Port_Range_Hints : constant Mono_Ports.Range_Hint_Array :=
      (Gain     => (Hint_Descriptor => LADSPA.Bounded_Below or LADSPA.Logarithmic or LADSPA.Default_1,
                    Lower_Bound     => 0.0,
                    Upper_Bound     => <>),
