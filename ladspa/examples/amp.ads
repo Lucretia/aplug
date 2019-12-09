@@ -9,9 +9,9 @@ with LADSPA;
 package Amp is
    package C renames Interfaces.C;
 
-   type Port_Numbers is (Control, Input_1, Output_1, Input_2, Output_2) with
+   type Port_Numbers is (Gain, Input_1, Output_1, Input_2, Output_2) with
      Convention => C;
-   subtype Mono_Port_Numbers is Port_Numbers range Control .. Output_1;
+   subtype Mono_Port_Numbers is Port_Numbers range Gain .. Output_1;
 
    function Instantiate (Descriptor  : access constant LADSPA.Descriptors;
                          Sample_Rate : C.unsigned_long) return LADSPA.Handles with
@@ -48,7 +48,7 @@ private
      Convention => C;
 
    Mono_Port_Descriptors : aliased constant Mono_Port_Descriptor_Array :=
-     (Control  => (LADSPA.Input or LADSPA.Control),
+     (Gain     => (LADSPA.Input or LADSPA.Control),
       Input_1  => (LADSPA.Input or LADSPA.Audio),
       Output_1 => (LADSPA.Output or LADSPA.Audio));
 
@@ -56,7 +56,7 @@ private
      Convention => C;
 
    Mono_Port_Names : Mono_Port_Names_Array :=
-     (Control  => C.Strings.New_String ("Gain"),
+     (Gain     => C.Strings.New_String ("Gain"),
       Input_1  => C.Strings.New_String ("Input"),
       Output_1 => C.Strings.New_String ("Output"));
 
@@ -64,7 +64,7 @@ private
      Convention => C;
 
    Mono_Port_Range_Hints : constant Mono_Port_Range_Hints_Array :=
-     (Control  => (Hint_Descriptor => LADSPA.Bounded_Below or LADSPA.Logarithmic or LADSPA.Default_1,
+     (Gain     => (Hint_Descriptor => LADSPA.Bounded_Below or LADSPA.Logarithmic or LADSPA.Default_1,
                    Lower_Bound     => 0.0,
                    Upper_Bound     => <>),
       Input_1  => (Hint_Descriptor => LADSPA.Default_None,

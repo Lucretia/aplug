@@ -10,7 +10,7 @@ package body Amp is
 
    type Amplifiers is
       record
-         Control_Value   : LADSPA.Data_Ptr;
+         Gain_Value      : LADSPA.Data_Ptr;
          Input_Buffer_1  : LADSPA.Data_Ptr;
          Output_Buffer_2 : LADSPA.Data_Ptr;
       end record;
@@ -73,8 +73,8 @@ package body Amp is
       if Instance /= null then
          if Amp /= null then
             case Actual_Port is
-               when Control =>
-                  Amp.Control_Value := Data_Location;
+               when Gain =>
+                  Amp.Gain_Value := Data_Location;
 
                when Input_1 =>
                   Amp.Input_Buffer_1 := Data_Location;
@@ -101,7 +101,7 @@ package body Amp is
    --  WARNING: Cannot do IO or memory allocations here.
    procedure Run (Instance : in LADSPA.Handles; Sample_Count : in C.unsigned_long) is
       Amp  : Amplifier_Ptr        := Convert (Instance);
-      Gain : constant LADSPA.Data := Amp.Control_Value.all;
+      Gain : constant LADSPA.Data := Amp.Gain_Value.all;
 
       package Amp_Ptrs is new Interfaces.C.Pointers
         (Index              => C.unsigned_long,
