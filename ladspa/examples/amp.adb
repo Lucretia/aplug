@@ -8,6 +8,7 @@ with System.Address_To_Access_Conversions;
 
 package body Amp is
    use type LADSPA.Data_Ptr;
+   use type LADSPA.Handles;
 
    type Amplifiers is
       record
@@ -19,19 +20,17 @@ package body Amp is
    type Amplifier_Ptr is access all Amplifiers with
      Convention => C;
 
-   function To_Address (Ptr : in LADSPA.Data_Ptr) return System.Address is
-      package Data_Conversions is new System.Address_To_Access_Conversions (LADSPA.Data);
-   begin
-      return Data_Conversions.To_Address (Data_Conversions.Object_Pointer (Ptr));
-   end To_Address;
+   -- function To_Address (Ptr : in LADSPA.Data_Ptr) return System.Address is
+   --    package Data_Conversions is new System.Address_To_Access_Conversions (LADSPA.Data);
+   -- begin
+   --    return Data_Conversions.To_Address (Data_Conversions.Object_Pointer (Ptr));
+   -- end To_Address;
 
-   function Image (Ptr : in LADSPA.Data_Ptr) return String is (System.Address_Image (To_Address (Ptr)));
+   -- function Image (Ptr : in LADSPA.Data_Ptr) return String is (System.Address_Image (To_Address (Ptr)));
 
-   -- package Amp_Conversions is new System.Address_To_Access_Conversions (Amplifiers);
    function Convert is new Ada.Unchecked_Conversion (Source => LADSPA.Handles, Target => Amplifier_Ptr);
    function Convert is new Ada.Unchecked_Conversion (Source => Amplifier_Ptr,  Target => LADSPA.Handles);
 
-   -- procedure Free is new Ada.Unchecked_Deallocation (Object => Amplifiers, Name => Amp_Conversions.Object_Pointer);
    procedure Free is new Ada.Unchecked_Deallocation (Object => Amplifiers, Name => Amplifier_Ptr);
 
    --  Create and destroy handles (access to Amplifiers).
@@ -40,20 +39,14 @@ package body Amp is
    is
       use type LADSPA.Descriptors;
    begin
-      -- return LADSPA.Handles (Amp_Conversions.To_Address (new Amplifiers));
       return Convert (new Amplifiers);
    end Instantiate;
 
 
    procedure Clean_Up (Instance : in LADSPA.Handles) is
-      -- Amp : Amp_Conversions.Object_Pointer := Amp_Conversions.To_Pointer (System.Address (Instance));
       Amp : Amplifier_Ptr := null;
-
-      use type LADSPA.Handles;
    begin
-      if Instance = null then
-         Put_Line ("Clean_Up - Instance is null");
-      else
+      if Instance /= null then
          Amp := Convert (Instance);
 
          if Amp = null then
@@ -71,6 +64,8 @@ package body Amp is
             C.Strings.Free (Mono_Descriptor.Maker);
             C.Strings.Free (Mono_Descriptor.Copyright);
          end if;
+      -- else
+      --    Put_Line ("Clean_Up - Instance is null");
       end if;
    end Clean_Up;
 
@@ -80,48 +75,45 @@ package body Amp is
                            Port          : in C.unsigned_long;
                            Data_Location : in LADSPA.Data_Ptr) is
 
-      -- Amp         : Amp_Conversions.Object_Pointer := Amp_Conversions.To_Pointer (System.Address (Instance));
       Amp         : Amplifier_Ptr              := Convert (Instance);
       Actual_Port : constant Mono_Port_Numbers := Mono_Port_Numbers'Val (Port);
 
       use type LADSPA.Handles;
    begin
-      Put_Line ("Connect_Port - Port # " & C.unsigned_long'Image (Port) & " - " & Mono_Port_Numbers'Image (Actual_Port));
+      -- Put_Line ("Connect_Port - Port # " & C.unsigned_long'Image (Port) & " - " & Mono_Port_Numbers'Image (Actual_Port));
 
-      if Instance = null then
-         Put_Line ("Connect_Port - Instance is null");
+      if Instance /= null then
+         if Amp /= null then
+            case Actual_Port is
+               when Control =>
+                  -- if Data_Location /= null then
+                  --    Put_Line ("Connect_Port - Control: " & Image (Data_Location));
+                  -- else
+                  --    Put_Line ("Connect_Port - Control = NULLLLL!!!!");
+                  -- end if;
+                  Amp.Control_Value := Data_Location;
+
+               when Input_1 =>
+                  -- if Data_Location /= null then
+                  --    Put_Line ("Connect_Port - Input_1: " & Image (Data_Location));
+                  -- else
+                  --    Put_Line ("Connect_Port - Input_1 = NULLLLL!!!!");
+                  -- end if;
+                  Amp.Input_Buffer_1 := Data_Location;
+
+               when Output_1 =>
+                  -- if Data_Location /= null then
+                  --    Put_Line ("Connect_Port - Output_1: " & Image (Data_Location));
+                  -- else
+                  --    Put_Line ("Connect_Port - Output_1 = NULLLLL!!!!");
+                  -- end if;
+                  Amp.Output_Buffer_2 := Data_Location;
+            end case;
+         end if;
+      -- else
+      --    Put_Line ("Connect_Port - Instance is null");
       end if;
 
-      if Amp /= null then
-         case Actual_Port is
-            when Control =>
-               if Data_Location /= null then
-                  -- Put_Line ("Control: " & System.Address_Image (Data_Conversions.To_Address (Data_Location)));
-                  Put_Line ("Connect_Port - Control: " & Image (Data_Location));
-               else
-                  Put_Line ("Connect_Port - Control = NULLLLL!!!!");
-               end if;
-               Amp.Control_Value := Data_Location;
-
-            when Input_1 =>
-               if Data_Location /= null then
-                  -- Put_Line ("Control: " & System.Address_Image (Data_Conversions.To_Address (Data_Location)));
-                  Put_Line ("Connect_Port - Input_1: " & Image (Data_Location));
-               else
-                  Put_Line ("Connect_Port - Input_1 = NULLLLL!!!!");
-               end if;
-               Amp.Input_Buffer_1 := Data_Location;
-
-            when Output_1 =>
-               if Data_Location /= null then
-                  -- Put_Line ("Control: " & System.Address_Image (Data_Conversions.To_Address (Data_Location)));
-                  Put_Line ("Connect_Port - Output_1: " & Image (Data_Location));
-               else
-                  Put_Line ("Connect_Port - Output_1 = NULLLLL!!!!");
-               end if;
-               Amp.Output_Buffer_2 := Data_Location;
-         end case;
-      end if;
    end Connect_Port;
 
    -- procedure Activate (Instance : in out LADSPA.Handles) is
@@ -137,10 +129,8 @@ package body Amp is
 
    --  WARNING: Cannot do IO or memory allocations here.
    procedure Run (Instance : in LADSPA.Handles; Sample_Count : in C.unsigned_long) is
-      -- Amp  : Amp_Conversions.Object_Pointer := null; --  Amp_Conversions.To_Pointer (System.Address (Instance));
       Amp : Amplifier_Ptr := null;
-      use type LADSPA.Handles;
-      -- use type Amp_Conversions.Object_Pointer;
+
       -- Gain : constant LADSPA.Data           := Amp.Control_Value.all;
 
       -- package Amp_Ptrs is new Interfaces.C.Pointers
@@ -155,7 +145,6 @@ package body Amp is
       -- use type C.C_float;
    begin
       if Instance /= null then
-         -- Amp := Amp_Conversions.To_Pointer (System.Address (Instance));
          Amp := Convert (Instance);
 
          if Amp /= null then

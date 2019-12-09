@@ -7,8 +7,6 @@ with Interfaces.C.Strings;
 with LADSPA;
 
 package Amp is
-   -- pragma Preelaborate;
-
    package C renames Interfaces.C;
 
    type Port_Numbers is (Control, Input_1, Output_1, Input_2, Output_2) with
