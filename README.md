@@ -15,11 +15,12 @@ Currently, this is quite hacky and uses a bunch of ```System.Address``` types to
 ## TODO
 
 1. Make the API nicer to work with.
-2. Possibly put the Runner procedures into separates where ```pragma Restrictions``` can be added in a nice way?
-   * Find out what real time restrictions are required here.
-   * The restrictions inside the separate seem to apply to the whole package!!
-3. Finish the Amplifier example.
-4. Port the other LADSPA examples.
+2. Finish the Amplifier example.
+3. Port the other LADSPA examples.
+
+### Note!
+
+Ada's ```pragma Restrictions``` as implemented by GNAT are partition wide and so, the LADSPA *run* callbacks cannot be restricted by the compiler.
 
 # Building
 
