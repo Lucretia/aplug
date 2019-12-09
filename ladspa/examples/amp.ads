@@ -2,6 +2,7 @@
 --
 --
 ------------------------------------------------------------------------------------------------------------------------
+with Ada.Finalization;
 with Interfaces.C;
 with Interfaces.C.Strings;
 with LADSPA;
@@ -65,25 +66,35 @@ private
       Output_1 => (Hint_Descriptor => LADSPA.Default_None,
                    others          => <>));
 
-  use type Interfaces.C.unsigned_long;
+   use type Interfaces.C.unsigned_long;
 
-  Mono_Descriptor : aliased LADSPA.Descriptors :=
-     (Unique_ID        => 1048,
-      Label            => C.Strings.New_String ("amp_mono"),
-      Properties       => LADSPA.Hard_RT_Capable,
-      Name             => C.Strings.New_String ("Mono Amplifier"),
-      Maker            => C.Strings.New_String ("Richard Furse (LADSPA example plugins) & Luke A. Guest (Ada port)"),
-      Copyright        => C.Strings.New_String ("None"),
-      Port_Count       => Mono_Port_Numbers'Pos (Mono_Port_Numbers'Last) + 1,  --  Pos starts at 0!
-      Port_Descriptors => Mono_Port_Descriptors'Address,
-      Port_Names       => Mono_Port_Names (Mono_Port_Names'First)'Access,
-      Port_Range_Hints => Mono_Port_Range_Hints'Address,
-      Instantiate      => Instantiate'Access,
-      Connect_Port     => Connect_Port'Access,
-      -- Activate         => Activate'Access,
-      Run              => Run'Access,
-      Clean_Up         => Clean_Up'Access,
-      others           => <>);
+   --  This is required so that on finalisation of the library (unload), the globally allocated data is destroyed.
+   type Mono_Descriptors is new Ada.Finalization.Limited_Controlled with
+      record
+         Data : aliased LADSPA.Descriptors;
+      end record;
+
+   overriding procedure Finalize (Self : in out Mono_Descriptors);
+
+   Mono_Descriptor : Mono_Descriptors := (Ada.Finalization.Limited_Controlled with
+      Data => (
+        Unique_ID        => 1048,
+        Label            => C.Strings.New_String ("amp_mono"),
+        Properties       => LADSPA.Hard_RT_Capable,
+        Name             => C.Strings.New_String ("Mono Amplifier"),
+        Maker            => C.Strings.New_String ("Richard Furse (LADSPA example plugins) & Luke A. Guest (Ada port)"),
+        Copyright        => C.Strings.New_String ("None"),
+        Port_Count       => Mono_Port_Numbers'Pos (Mono_Port_Numbers'Last) + 1,  --  Pos starts at 0!
+        Port_Descriptors => Mono_Port_Descriptors'Address,
+        Port_Names       => Mono_Port_Names (Mono_Port_Names'First)'Access,
+        Port_Range_Hints => Mono_Port_Range_Hints'Address,
+        Instantiate      => Instantiate'Access,
+        Connect_Port     => Connect_Port'Access,
+        -- Activate         => Activate'Access,
+        Run              => Run'Access,
+        Clean_Up         => Clean_Up'Access,
+        others           => <>
+      ));
 
    function Descriptor (Index : C.unsigned_long) return access constant LADSPA.Descriptors with
      Export        => True,

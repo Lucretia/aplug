@@ -43,20 +43,6 @@ package body Amp is
             Put_Line ("Clean_Up - Amp is null");
          else
             Free (Amp);
-
-            --  TODO: This needs to go into a controlled object.
-            for C_Str_Index in Mono_Port_Numbers loop
-               declare
-                  C_Str : C.Strings.chars_ptr := Mono_Port_Names (C_Str_Index);
-               begin
-                  C.Strings.Free (C_Str);
-               end;
-            end loop;
-
-            C.Strings.Free (Mono_Descriptor.Label);
-            C.Strings.Free (Mono_Descriptor.Name);
-            C.Strings.Free (Mono_Descriptor.Maker);
-            C.Strings.Free (Mono_Descriptor.Copyright);
          end if;
       -- else
       --    Put_Line ("Clean_Up - Instance is null");
@@ -143,11 +129,28 @@ package body Amp is
    begin
       case Index is
          when 0 =>
-            return Mono_Descriptor'Access;
+            return Mono_Descriptor.Data'Access;
          when others =>
             null;
       end case;
 
       return null;
    end Descriptor;
+
+
+   overriding procedure Finalize (Self : in out Mono_Descriptors) is
+   begin
+      for C_Str_Index in Mono_Port_Numbers loop
+         declare
+            C_Str : C.Strings.chars_ptr := Mono_Port_Names (C_Str_Index);
+         begin
+            C.Strings.Free (C_Str);
+         end;
+      end loop;
+
+      C.Strings.Free (Mono_Descriptor.Data.Label);
+      C.Strings.Free (Mono_Descriptor.Data.Name);
+      C.Strings.Free (Mono_Descriptor.Data.Maker);
+      C.Strings.Free (Mono_Descriptor.Data.Copyright);
+   end Finalize;
 end Amp;
