@@ -1,4 +1,3 @@
-with Ada.Characters.Latin_1;
 with Interfaces.C; use Interfaces.C;
 with Interfaces.C.Strings;
 with System;
@@ -6,9 +5,7 @@ with System;
 package LADSPA is
    pragma Preelaborate;
 
-   package L1 renames Ada.Characters.Latin_1;
-
-   Version       : aliased constant String := "1.1" & L1.NUL;
+   Version       : aliased constant String := "1.1";
    Version_Major : constant := 1;
    Version_Minor : constant := 1;
 
