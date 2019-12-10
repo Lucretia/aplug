@@ -36,6 +36,20 @@ $ cd aplug/build/gnat
 $ gprbuild -P amp.gpr -p
 ```
 
+# How to use this library
+
+You do not need ```ladspa.h``` to use this library, this library implements this header in Ada.
+
+```bash
+$ cd ~/opt
+$ git clone git@github.com:Lucretia/aplug.git
+$ export GPR_PROJECT_PATH=$(pwd)/aplug/build/gnat:$GPR_PROJECT_PATH  # or use ADA_PROJECT_PATH
+$ mkdir ~/src/<my ladspa plugin>
+$ cp ladspa/examples/<example>*.ad[sb] ~/src/<my ladspa plugin>
+```
+
+You probably have your own directory layout, copy over the corresponding gpr file and edit that as required.
+
 # Dependencies
 
 Ada 2012 compiler.
