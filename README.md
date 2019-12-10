@@ -5,12 +5,13 @@ Port of the LADSPA 1.1.1 API for Ada 2012.
 ## Features
 
 * Mono amplifier.
+* Stereo amplifier.
 
 ## Screenshots
 
 I've only tested in Carla at this time.
 
-![Carla plug-in window](./screenshots/carla.png)
+![Carla plug-in window](./screenshots/carla_add_plugins.png)
 ![Carla main window](./screenshots/carla_main_window.png)
 ![Carla patch bay window](./screenshots/carla_patchbay.png)
 
@@ -19,8 +20,7 @@ Currently, this is quite hacky and uses a bunch of ```System.Address``` types to
 ## TODO
 
 1. Make the API nicer to work with.
-2. Finish the Amplifier example.
-3. Port the other LADSPA examples.
+2. Port the other LADSPA examples.
 
 ### Note!
 
