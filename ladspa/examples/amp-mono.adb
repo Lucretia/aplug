@@ -12,7 +12,7 @@ package body Amp.Mono is
       record
          Gain_Value      : LADSPA.Data_Ptr;
          Input_Buffer_1  : LADSPA.Data_Ptr;
-         Output_Buffer_2 : LADSPA.Data_Ptr;
+         Output_Buffer_1 : LADSPA.Data_Ptr;
       end record;
 
    type Amplifier_Ptr is access all Amplifiers with
@@ -70,7 +70,7 @@ package body Amp.Mono is
                   Amp.Input_Buffer_1 := Data_Location;
 
                when Output_1 =>
-                  Amp.Output_Buffer_2 := Data_Location;
+                  Amp.Output_Buffer_1 := Data_Location;
             end case;
          end if;
       end if;
@@ -100,7 +100,7 @@ package body Amp.Mono is
          Default_Terminator => 0.0);
 
       Input  : Amp_Ptrs.Pointer := Amp_Ptrs.Pointer (Amp.Input_Buffer_1);
-      Output : Amp_Ptrs.Pointer := Amp_Ptrs.Pointer (Amp.Output_Buffer_2);
+      Output : Amp_Ptrs.Pointer := Amp_Ptrs.Pointer (Amp.Output_Buffer_1);
 
       use type LADSPA.Data;
    begin
