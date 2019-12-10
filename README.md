@@ -6,6 +6,7 @@ Port of the LADSPA 1.1.1 API for Ada 2012.
 
 * Mono amplifier.
 * Stereo amplifier.
+* Simple delay line.
 
 ## Screenshots
 
@@ -21,6 +22,7 @@ Currently, this is quite hacky and uses a bunch of ```System.Address``` types to
 
 1. Make the API nicer to work with.
 2. Port the other LADSPA examples.
+3. Work out why loading all the plugins into Carla crashes Carla, apart from being unstable.
 
 ### Note!
 
