@@ -76,7 +76,7 @@ private
 
    overriding procedure Finalize (Self : in out Descriptors);
 
-   Mono_Descriptor : Descriptors := (Ada.Finalization.Limited_Controlled with
+   Mono_Descriptor : constant Descriptors := (Ada.Finalization.Limited_Controlled with
       Data => (
         Unique_ID        => 1048,
         Label            => C.Strings.New_String ("amp_mono"),

@@ -139,18 +139,28 @@ package body Amp is
 
 
    overriding procedure Finalize (Self : in out Descriptors) is
+      C_Str : C.Strings.chars_ptr;
    begin
       for C_Str_Index in Mono_Port_Numbers loop
-         declare
-            C_Str : C.Strings.chars_ptr := Mono_Port_Names (C_Str_Index);
-         begin
-            C.Strings.Free (C_Str);
-         end;
+         C_Str := Mono_Port_Names (C_Str_Index);
+
+         C.Strings.Free (C_Str);
       end loop;
 
-      C.Strings.Free (Mono_Descriptor.Data.Label);
-      C.Strings.Free (Mono_Descriptor.Data.Name);
-      C.Strings.Free (Mono_Descriptor.Data.Maker);
-      C.Strings.Free (Mono_Descriptor.Data.Copyright);
+      C_Str := Mono_Descriptor.Data.Label;
+
+      C.Strings.Free (C_Str);
+
+      C_Str := Mono_Descriptor.Data.Name;
+
+      C.Strings.Free (C_Str);
+
+      C_Str := Mono_Descriptor.Data.Maker;
+
+      C.Strings.Free (C_Str);
+
+      C_Str := Mono_Descriptor.Data.Copyright;
+
+      C.Strings.Free (C_Str);
    end Finalize;
 end Amp;
