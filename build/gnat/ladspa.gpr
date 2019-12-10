@@ -43,7 +43,7 @@ abstract project LADSPA is
    --    for Default_Switches ("Ada") use ("-g", "-v -v");
    -- end Linker;
 
-   Source_Files := "ladspa.ads";
+   Source_Files := ("ladspa.ads", "ladspa.adb");
    Source_Dirs  := "../../ladspa/src";
    -- for Source_Dirs     use ();
    -- for Source_Dirs     use ("../../ladspa/src"); --, "../../src/c");

@@ -5,7 +5,9 @@ library project Amp extends "ladspa.gpr" is
 
    -- for Source_Dirs     use ("../../ladspa/examples");
    for Source_Dirs     use (LADSPA.Source_Dirs, "../../ladspa/examples");
-   for Source_Files    use (LADSPA.Source_Files, "amp.adb", "amp.ads");
+   for Source_Files    use LADSPA.Source_Files &
+                           ("amp.adb", "amp.ads",
+                            "amp-mono.ads", "amp-mono.adb");
    for Object_Dir      use "gen/" & LADSPA.Mode & "/.obj";
    for Library_ALI_Dir use "gen/" & LADSPA.Mode & "/.obj/ali";
    for Library_Dir     use "gen/" & LADSPA.Mode;

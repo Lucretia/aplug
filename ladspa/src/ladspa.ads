@@ -1,24 +1,27 @@
-with Interfaces.C; use Interfaces.C;
+with Ada.Finalization;
+with Interfaces.C;
 with Interfaces.C.Strings;
 with System;
 
 package LADSPA is
    pragma Preelaborate;
 
+   package C renames Interfaces.C;
+
    Version       : constant String := "1.1";
    Version_Major : constant := 1;
    Version_Minor : constant := 1;
 
-   subtype Data is C_float;  --  /usr/include/ladspa.h:84
+   subtype Data is C.C_float;  --  /usr/include/ladspa.h:84
 
    type Data_Ptr is access all Data with
      Convention => C;
 
-   type Data_Array is array (unsigned_long range <>) of aliased Data with
+   type Data_Array is array (C.unsigned_long range <>) of aliased Data with
      Convention => C;
 
    --  As defined in C, this is an int, which is signed! In Ada, it must be unsigned.
-   type All_Properties is mod 2 ** int'Size with  --  /usr/include/ladspa.h:94
+   type All_Properties is mod 2 ** C.int'Size with  --  /usr/include/ladspa.h:94
      Convention => C;
 
    --  See ladspa.h for description of each.
@@ -34,7 +37,7 @@ package LADSPA is
    --    return (x) and LADSPA_PROPERTY_HARD_RT_CAPABLE;
 
    --  As above, re All_Properties.
-   type All_Port_Descriptors is mod 2 ** int'Size with  --  /usr/include/ladspa.h:152
+   type All_Port_Descriptors is mod 2 ** C.int'Size with  --  /usr/include/ladspa.h:152
      Convention => C;
 
    --  See ladspa.h for description of each.
@@ -53,7 +56,7 @@ package LADSPA is
    --    return (x) and LADSPA_PORT_AUDIO;
 
    --  As above, re All_Properties.
-   type Port_Range_Hint_Descriptors is mod 2 ** int'Size with  --  /usr/include/ladspa.h:200
+   type Port_Range_Hint_Descriptors is mod 2 ** C.int'Size with  --  /usr/include/ladspa.h:200
      Convention => C;
 
    --  See ladspa.h for description of each.
@@ -123,7 +126,7 @@ package LADSPA is
       type Descriptor_Array is array (Port_Type) of All_Port_Descriptors with
         Convention => C;
 
-      type Name_Array is array (Port_Type) of aliased Interfaces.C.Strings.chars_ptr with
+      type Name_Array is array (Port_Type) of aliased C.Strings.chars_ptr with
         Convention => C;
 
       type Range_Hint_Array is array (Port_Type) of All_Port_Range_Hints with
@@ -139,11 +142,11 @@ package LADSPA is
    type Descriptors;
 
    type Instantiators is access function (Descriptor  : access constant Descriptors;
-                                          Sample_Rate : unsigned_long) return Handles with
+                                          Sample_Rate : C.unsigned_long) return Handles with
      Convention => C;
 
    type Port_Connectors is access procedure (Instance      : in Handles;
-                                             Port          : in unsigned_long;
+                                             Port          : in C.unsigned_long;
                                              Data_Location : in Data_Ptr) with
      Convention => C;
 
@@ -153,7 +156,7 @@ package LADSPA is
    type Deactivators is access procedure (Instance : in Handles) with
      Convention => C;
 
-   type Runners is access procedure (Instance : in Handles; Sample_Count : in unsigned_long) with
+   type Runners is access procedure (Instance : in Handles; Sample_Count : in C.unsigned_long) with
      Convention => C;
 
    --  type Adding_Runners is access procedure (Instance : in out Handles; Sample_Count : in unsigned_long) with
@@ -165,16 +168,16 @@ package LADSPA is
    type Cleaners is access procedure (Instance : in Handles) with
      Convention => C;
 
-   type Port_Name_Array_Ptr is not null access constant Interfaces.C.Strings.chars_ptr;
+   type Port_Name_Array_Ptr is not null access constant C.Strings.chars_ptr;
 
    type Descriptors is record
-      Unique_ID            : aliased unsigned_long;
-      Label                : Interfaces.C.Strings.chars_ptr;
+      Unique_ID            : aliased C.unsigned_long;
+      Label                : C.Strings.chars_ptr;
       Properties           : aliased All_Properties;
-      Name                 : Interfaces.C.Strings.chars_ptr;
-      Maker                : Interfaces.C.Strings.chars_ptr;
-      Copyright            : Interfaces.C.Strings.chars_ptr;
-      Port_Count           : aliased unsigned_long;
+      Name                 : C.Strings.chars_ptr;
+      Maker                : C.Strings.chars_ptr;
+      Copyright            : C.Strings.chars_ptr;
+      Port_Count           : aliased C.unsigned_long;
       Port_Descriptors     : System.Address;  --  access All_Port_Descriptors;
       Port_Names           : Port_Name_Array_Ptr;
       Port_Range_Hints     : System.Address;  --  access constant All_Port_Range_Hints;
@@ -190,6 +193,14 @@ package LADSPA is
    end record with
      Convention => C_Pass_By_Copy;
 
-   type Descriptor_Functions is access function (Index : unsigned_long) return access constant Descriptors with
+   --  This is required so that on finalisation of the library (unload), the globally allocated data is destroyed.
+   type Root_Descriptors is abstract new Ada.Finalization.Limited_Controlled with
+      record
+         Data : aliased Descriptors;
+      end record;
+
+   overriding procedure Finalize (Self : in out Root_Descriptors);
+
+   type Descriptor_Functions is access function (Index : C.unsigned_long) return access constant Descriptors with
      Convention => C;  --  /usr/include/ladspa.h:593
 end LADSPA;
