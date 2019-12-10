@@ -1,4 +1,4 @@
-with Ada.Text_IO; use Ada.Text_IO;
+-- with Ada.Text_IO; use Ada.Text_IO;
 with Ada.Unchecked_Conversion;
 with Ada.Unchecked_Deallocation;
 with Interfaces;
@@ -56,11 +56,15 @@ package body Delays is
       --  Buffer size is a power of two bigger than max delay time.
       Min_Buffer := C.unsigned_long (LADSPA.Data (Sample_Rate) * Max_Delay);
 
+      -- Put_Line ("Min_Buffer  : " & C.unsigned_long'Image (Min_Buffer));
+      -- Put_Line ("Buffer_Size : " & C.unsigned_long'Image (Buffer_Size));
+
       while Buffer_Size < Min_Buffer loop
          Buffer_Size := C.unsigned_long (Interfaces.Shift_Left (Interfaces.Unsigned_64 (Buffer_Size), 1));
+         -- Put_Line ("Buffer_Size : " & C.unsigned_long'Image (Buffer_Size));
       end loop;
 
-      Delay_Line.Buffer := new Buffers (0 .. Buffer_Size);
+      Delay_Line.Buffer := new Buffers'(0 .. Buffer_Size => 0.0);
 
       if Delay_Line.Buffer = null then
          Free (Delay_Line);
@@ -150,26 +154,26 @@ package body Delays is
          Default_Terminator => 0.0);
 
       Delays              : Simple_Delay_Line_Ptr := Convert (Instance);
-      Buffer_Size_Minus_1 : C.unsigned_long       := Delays.Buffer'Length - 1;
+      Buffer_Size_Minus_1 : C.unsigned_long       := Delays.Buffer'Last - 1;
       Delay_Length        : C.unsigned_long       :=
         C.unsigned_long (Limit_Between_0_And_Max_Delay (Delays.Delay_Length.all) * Delays.Sample_Rate);
       Input               : Delay_Ptrs.Pointer    := Delay_Ptrs.Pointer (Delays.Input_Buffer);
       Output              : Delay_Ptrs.Pointer    := Delay_Ptrs.Pointer (Delays.Output_Buffer);
       Write_Offset        : C.unsigned_long       := Delays.Write_Position;
-      Read_Offset         : C.unsigned_long       := Write_Offset + Delays.Buffer'Length - Delay_Length;
+      Read_Offset         : C.unsigned_long       := Write_Offset + Delays.Buffer'Last - Delay_Length;
       Wet                 : LADSPA.Data           := Limit_Between_0_And_1 (Delays.Dry_Wet.all);
       Dry                 : LADSPA.Data           := 1.0 - Wet;
       Input_Sample        : LADSPA.Data           := 0.0;
 
       use type LADSPA.Data;
    begin
-      Put_Line ("Buffer length : " & C.unsigned_long'Image (Delays.Buffer'Length) & " - " & C.unsigned_long'Image (Buffer_Size_Minus_1));
-      Put_Line ("Delays.Sample_Rate : " & LADSPA.Data'Image (Delays.Sample_Rate));
+      -- Put_Line ("Buffer length : " & C.unsigned_long'Image (Delays.Buffer'Last) & " - " & C.unsigned_long'Image (Buffer_Size_Minus_1));
       -- Put_Line ("Delay_Length : " & LADSPA.Data'Image (Delays.Delay_Length.all));
+      -- Put_Line ("Delays.Sample_Rate : " & LADSPA.Data'Image (Delays.Sample_Rate));
+      -- Put_Line ("Write_Offset : " & C.unsigned_long'Image (Write_Offset));
+      -- Put_Line ("Read_Offset : " & C.unsigned_long'Image (Read_Offset));
       -- Put_Line ("Wet : " & LADSPA.Data'Image (Wet));
       -- Put_Line ("Dry : " & LADSPA.Data'Image (Dry));
-      Put_Line ("Write_Offset : " & C.unsigned_long'Image (Write_Offset));
-      Put_Line ("Read_Offset : " & C.unsigned_long'Image (Read_Offset));
       for Index in 0 .. Sample_Count loop
          Input_Sample := Input.all;
          -- Put_Line ("Input_Sample : " & LADSPA.Data'Image (Input_Sample));
