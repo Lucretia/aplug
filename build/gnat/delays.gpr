@@ -1,0 +1,19 @@
+-- with "ladspa.gpr";
+
+library project Delays extends "ladspa.gpr" is
+   Name := "delay";
+
+   -- for Source_Dirs     use ("../../ladspa/examples");
+   for Source_Dirs     use (LADSPA.Source_Dirs, "../../ladspa/examples");
+   for Source_Files    use LADSPA.Source_Files &
+                           ("delays.adb", "delays.ads");
+   for Object_Dir      use "gen/" & LADSPA.Mode & "/.obj";
+   for Library_ALI_Dir use "gen/" & LADSPA.Mode & "/.obj/ali";
+   for Library_Dir     use "gen/" & LADSPA.Mode;
+   for Library_Name    use Name;
+   for Library_Version use Name & ".so";
+   for Library_Kind       use "dynamic";
+   for Library_Interface  use ("ladspa", "delays");
+   -- for Library_Standalone use "encapsulated";
+   -- for Library_Auto_Init  use "True";
+end Delays;
