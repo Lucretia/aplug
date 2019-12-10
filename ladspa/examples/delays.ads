@@ -27,8 +27,8 @@ private
                            Data_Location : in LADSPA.Data_Ptr) with
      Convention => C;
 
-   -- procedure Activate (Instance : in out Handles) with
-   --   Convention => C;
+   procedure Activate (Instance : in LADSPA.Handles) with
+     Convention => C;
 
    -- procedure Deactivate (Instance : in out Handles) with
    --   Convention => C;
@@ -94,7 +94,7 @@ private
         Port_Range_Hints => Port_Range_Hints'Address,
         Instantiate      => Instantiate'Access,
         Connect_Port     => Connect_Port'Access,
-        -- Activate         => Activate'Access,
+        Activate         => Activate'Access,
         Run              => Run'Access,
         Clean_Up         => Clean_Up'Access,
         others           => <>

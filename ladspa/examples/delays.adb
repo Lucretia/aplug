@@ -121,11 +121,12 @@ package body Delays is
 
    end Connect_Port;
 
-   -- procedure Activate (Instance : in out LADSPA.Handles) is
-   -- begin
+   procedure Activate (Instance : in LADSPA.Handles) is
+      Delays : Simple_Delay_Line_Ptr := Convert (Instance);
+   begin
       -- Put_Line (">>> " & C.unsigned_long'Image (Descriptor.Port_Count));
-   --    null;
-   -- end Activate;
+      Delays.Buffer.all := Buffers'(Delays.Buffer'Range => 0.0);
+   end Activate;
 
    -- procedure Deactivate (Instance : in out Handles) is
    -- begin
@@ -162,12 +163,13 @@ package body Delays is
 
       use type LADSPA.Data;
    begin
-      -- Put_Line ("Buffer length : " & C.unsigned_long'Image (Delays.Buffer'Length) & " - " & C.unsigned_long'Image (Buffer_Size_Minus_1));
+      Put_Line ("Buffer length : " & C.unsigned_long'Image (Delays.Buffer'Length) & " - " & C.unsigned_long'Image (Buffer_Size_Minus_1));
+      Put_Line ("Delays.Sample_Rate : " & LADSPA.Data'Image (Delays.Sample_Rate));
       -- Put_Line ("Delay_Length : " & LADSPA.Data'Image (Delays.Delay_Length.all));
       -- Put_Line ("Wet : " & LADSPA.Data'Image (Wet));
       -- Put_Line ("Dry : " & LADSPA.Data'Image (Dry));
-      -- Put_Line ("Write_Offset : " & C.unsigned_long'Image (Write_Offset));
-      -- Put_Line ("Read_Offset : " & C.unsigned_long'Image (Read_Offset));
+      Put_Line ("Write_Offset : " & C.unsigned_long'Image (Write_Offset));
+      Put_Line ("Read_Offset : " & C.unsigned_long'Image (Read_Offset));
       for Index in 0 .. Sample_Count loop
          Input_Sample := Input.all;
          -- Put_Line ("Input_Sample : " & LADSPA.Data'Image (Input_Sample));
