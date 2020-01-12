@@ -62,7 +62,7 @@ FSF GNAT 9.2.0
 
 # Copyright
 
-Copyright (C) 2019 by Luke A. Guest
+Copyright (C) 2019-2020 by Luke A. Guest
 
 # Licence
 
